@@ -1,0 +1,19 @@
+name: giocomo_lab_nwb
+channels:
+- defaults
+- anaconda
+- conda-forge
+dependencies:
+- python=3.7
+- ipython
+- pip
+- numpy
+- scipy
+- jupyter
+- matplotlib
+- h5py
+- pynwb
+- hdmf
+- pip:
+  - git+https://github.com/NeurodataWithoutBorders/nwbn-conversion-tools
+  - -e .

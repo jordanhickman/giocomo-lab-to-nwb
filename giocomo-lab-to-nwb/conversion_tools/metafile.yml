@@ -1,0 +1,24 @@
+NWBFile:
+  data_collection: ''
+  experiment_description: ADDME
+  experimenter: Name
+  identifier: ABC123
+  institution: My University
+  keywords:
+  - kw1
+  - kw2
+  lab: Giocomo lab
+  notes: ''
+  pharmacology: ''
+  protocol: ''
+  related_pubications: ''
+  session_description: session_description
+  session_id: ADDME
+  session_start_time: 2019-09-16 17:10:00
+  slices: ''
+  stimulus_notes: ''
+  surgery: ''
+  virus: ''
+Ephys:
+  Device:
+    name: Device
