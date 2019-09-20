@@ -21,7 +21,7 @@ After activating the correct environment, the conversion function can be used in
 **1. Imported and run from a python script:** <br/>
 Here's an example: we'll grab SpikeGLX data from `.imec0.ap.bin` files and convert it to a `.nwb` file.
 ```python
-from giocomo_lab_to_nwb.conversion_tools import conversion_function
+from giocomo_lab_to_nwb.conversion_tools.conversion_module import conversion_function
 
 f_source = 'G4_190620_keicontrasttrack_10secBaseline1_g0_t0.imec0.ap.bin'
 f_nwb = 'output.nwb'
