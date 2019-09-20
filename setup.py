@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='giocomo-lab-to-nwb',
+    name='giocomo_lab_to_nwb',
     version='0.1dev',
     description='tool to convert giocomo matlab data into NWB:N format',
     author='Kristin Quick',
