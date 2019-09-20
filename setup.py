@@ -6,7 +6,7 @@ setup(
     description='tool to convert giocomo matlab data into NWB:N format',
     author='Kristin Quick',
     author_email='kristin@scenda.io',
-    packages=['giocomo-lab-to-nwb'],
+    #packages=['giocomo_lab_to_nwb'],
     install_requires=['pynwb',
                       'numpy',
                       'scipy',
