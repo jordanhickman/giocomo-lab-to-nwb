@@ -26,7 +26,7 @@ from giocomo_lab_to_nwb.conversion_tools.conversion_module import conversion_fun
 f_source = 'G4_190620_keicontrasttrack_10secBaseline1_g0_t0.imec0.ap.bin'
 f_nwb = 'output.nwb'
 metafile = 'metafile.yml'
-conversion_function(f1,
+conversion_function(f_source,
                     f_nwb=f_nwb,
                     metafile=metafile)
 ```
