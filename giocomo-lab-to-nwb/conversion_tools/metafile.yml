@@ -1,3 +1,17 @@
+Ephys:
+  Device:
+    name: Device
+  ElectricalSeries:
+    comments: ''
+    data: true
+    description: ''
+    electrodes: true
+    name: ElectricalSeries
+  ElectrodeGroup:
+    description: description
+    device: Device
+    location: location
+    name: ElectrodeGroup
 NWBFile:
   data_collection: ''
   experiment_description: ADDME
@@ -11,7 +25,7 @@ NWBFile:
   notes: ''
   pharmacology: ''
   protocol: ''
-  related_pubications: ''
+  related_publications: ''
   session_description: session_description
   session_id: ADDME
   session_start_time: 2019-09-16 17:10:00
@@ -19,6 +33,3 @@ NWBFile:
   stimulus_notes: ''
   surgery: ''
   virus: ''
-Ephys:
-  Device:
-    name: Device
