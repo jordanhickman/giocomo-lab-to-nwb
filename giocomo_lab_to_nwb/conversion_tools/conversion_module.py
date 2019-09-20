@@ -3,9 +3,7 @@
 # written for Giocomo Lab
 # ------------------------------------------------------------------------------
 from nwbn_conversion_tools.ephys.acquisition.spikeglx.spikeglx import Spikeglx2NWB
-
 import yaml
-import numpy as np
 import os
 
 
@@ -48,11 +46,11 @@ def conversion_function(*f_sources, f_nwb, metafile, **kwargs):
     print('Size: ', os.stat(f_nwb).st_size/1e6, ' mb')
 
 
-#If called directly fom terminal
+# If called directly fom terminal
 if __name__ == '__main__':
     import sys
 
-    if len(sys.argv)<4:
+    if len(sys.argv) < 4:
         print('Error: Please provide source files, nwb file name and metafile.')
 
     f1 = sys.argv[1]
