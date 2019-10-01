@@ -64,6 +64,6 @@ if __name__ == '__main__':
     source_paths['spikeglx data'] = {'type': 'file', 'path': sys.argv[1]}
     f_nwb = sys.argv[2]
     metafile = sys.argv[3]
-    conversion_function(f1,
+    conversion_function(source_paths=source_paths,
                         f_nwb=f_nwb,
                         metafile=metafile)
