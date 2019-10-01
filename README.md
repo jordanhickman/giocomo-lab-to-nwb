@@ -23,10 +23,12 @@ Here's an example: we'll grab SpikeGLX data from `.imec0.ap.bin` files and conve
 ```python
 from giocomo_lab_to_nwb.conversion_tools.conversion_module import conversion_function
 
-f_source = 'G4_190620_keicontrasttrack_10secBaseline1_g0_t0.imec0.ap.bin'
+source_paths = {}
+source_paths['spikeglx data'] = {'type': 'file', 'path': 'G4_190620_keicontrasttrack_10secBaseline1_g0_t0.imec0.ap.bin'}
 f_nwb = 'output.nwb'
 metafile = 'metafile.yml'
-conversion_function(f_source,
+
+conversion_function(source_paths=source_paths,
                     f_nwb=f_nwb,
                     metafile=metafile)
 ```
@@ -35,7 +37,7 @@ conversion_function(f_source,
 **2. Command line:** <br/>
 Similarly, the conversion function can be called from the command line in terminal:
 ```
-$ python conversion_module.py G4_190620_keicontrasttrack_10secBaseline1_g0_t0.imec0.ap.bin output.nwb metafile.yml
+$ python conversion_module.py [imec_bin_file] [output_file] [metadata_file]
 ```
 <br/>
 
