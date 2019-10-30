@@ -39,7 +39,7 @@ def conversion_function(source_paths, f_nwb, metafile, **kwargs):
     extractor = Spikeglx2NWB(nwbfile=None, metadata=metadata, npx_file=npx_file)
 
     # Add acquisition data
-    extractor.add_acquisition(es_name='ElectricalSeries', metadata=metadata['Ephys'])
+    extractor.add_acquisition(es_name='ElectricalSeries', metadata=metadata['Ecephys'])
 
     # Run spike sorting method
     extractor.run_spike_sorting()
