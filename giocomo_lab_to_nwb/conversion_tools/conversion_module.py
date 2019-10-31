@@ -7,7 +7,7 @@ import yaml
 import os
 
 
-def conversion_function(source_paths, f_nwb, metafile, **kwargs):
+def conversion_function(source_paths, f_nwb, metadata, **kwargs):
     """
     Copy data stored in a set of .npz files to a single NWB file.
 
@@ -18,15 +18,15 @@ def conversion_function(source_paths, f_nwb, metafile, **kwargs):
         {'spikeglx data': {'type': 'file', 'path': ''}}
     f_nwb : str
         Path to output NWB file, e.g. 'my_file.nwb'.
-    metafile : str
-        Path to .yml meta data file
+    metadata : dict
+        Dictionary containing metadata
     **kwargs : key, value pairs
         Extra keyword arguments.
     """
 
     # Load metadata from YAML file
-    with open(metafile) as f:
-        metadata = yaml.safe_load(f)
+    #with open(metafile) as f:
+    #    metadata = yaml.safe_load(f)
 
     # Source files
     npx_file = None
