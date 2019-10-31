@@ -4,6 +4,8 @@ from datetime import datetime
 import hdf5storage
 import numpy as np
 import pytz
+import sys
+import interface_config
 from pynwb import NWBFile, NWBHDF5IO
 from pynwb.misc import Units
 from pynwb.file import Subject
@@ -260,3 +262,15 @@ def convert(input_file,
     with NWBHDF5IO(outpath, 'w') as io:
         io.write(nwbfile)
         print('saved', outpath)
+
+if __name__ == '__main__':
+    '''
+    To run conversion:
+    -function calls with conversion.convert()
+    -run interface_gui
+    -run interface_config
+    -run conversion.py in the terminal which will calls interface_config and convert the data listed in that file
+        e.g. *\PycharmProjects\giocomo-lab-to-nwb\giocomo_lab_to_nwb>conversion.py config.yaml
+    '''
+    config_file_path= sys.argv[1]
+    interface_config.read_yaml(config_file_path)
