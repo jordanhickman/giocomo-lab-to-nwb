@@ -216,8 +216,10 @@ def convert(input_file,
 
     # Add information about each unit, termed 'cluster' in giocomo data
     # create new columns in unit table
-    nwbfile.add_unit_column('quality', 'the labels that you gave to the clusters during manual sorting in phy (1=MUA, '
+    nwbfile.add_unit_column('quality', 'labels given to clusters during manual sorting in phy (1=MUA, '
                                        '2=Good, 3=Unsorted)')
+
+    # cluster information
     cluster_ids = matfile['sp'][0]['cids'][0][0]
     cluster_quality = matfile['sp'][0]['cgs'][0][0]
     # spikes in time
@@ -238,15 +240,21 @@ def convert(input_file,
     # create TemplateUnits units table
     template_units = Units(name='TemplateUnits',
                            description='units assigned during automatic spike sorting')
+    template_units.add_column('tempScalingAmps', 'scaling amplitude applied to the template when extracting spike', index=True)
 
+    # information on extracted spike templates
     spike_templates = np.ravel(matfile['sp'][0]['spikeTemplates'][0])
     spike_template_ids = np.unique(spike_templates)
+    # template scaling amplitudes
+    temp_scaling_amps = np.ravel(matfile['sp'][0]['tempScalingAmps'][0])
 
     for i, spike_template_id in enumerate(spike_template_ids):
         template_spike_times = spike_times[spike_templates == spike_template_id]
+        temp_scaling_amps_per_template = temp_scaling_amps[spike_templates == spike_template_id]
         template_units.add_unit(id=int(spike_template_id),
                                 spike_times=template_spike_times,
-                                electrode_group=electrode_group)
+                                electrode_group=electrode_group,
+                                tempScalingAmps=temp_scaling_amps_per_template)
 
     # create ecephys processing module
     spike_template_module = nwbfile.create_processing_module(
@@ -272,5 +280,11 @@ if __name__ == '__main__':
     -run conversion.py in the terminal which will calls interface_config and convert the data listed in that file
         e.g. *\PycharmProjects\giocomo-lab-to-nwb\giocomo_lab_to_nwb>conversion.py config.yaml
     '''
-    config_file_path= sys.argv[1]
-    interface_config.read_yaml(config_file_path)
+
+    if len(sys.argv) > 1:
+        # this indicates conversion.py being called from terminal
+        config_file_path = sys.argv[1]
+        interface_config.read_yaml(config_file_path)
+    else:
+        # indicates __main__ being run inside editor
+        interface_config.read_yaml()
