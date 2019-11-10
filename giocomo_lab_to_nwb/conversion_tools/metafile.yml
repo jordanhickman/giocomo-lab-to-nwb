@@ -22,6 +22,16 @@ NWBFile:
   - kw1
   - kw2
   lab: Giocomo lab
+  lab_meta_data:
+    neurodata_type: LabMetaData_ext
+    name: LabMetaData
+    acquisition_sampling_rate: 1000.
+    number_of_electrodes: 10
+    file_path: 'path/to/file'
+    bytes_to_skip: 2
+    raw_data_dtype: 'int16'
+    high_pass_filtered: True
+    movie_start_time: 15.6
   notes: ''
   pharmacology: ''
   protocol: ''
