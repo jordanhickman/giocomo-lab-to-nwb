@@ -14,8 +14,9 @@ from pynwb.behavior import Position, BehavioralEvents
 def convert(input_file,
             session_start_time,
             subject_date_of_birth,
-            subject_id='L5',
-            subject_description='wild-type',
+            subject_id='I5',
+            subject_description='naive',
+            subject_genotype='wild-type',
             subject_sex='M',
             subject_weight='11.6g',
             subject_species='Mus musculus',
@@ -39,6 +40,8 @@ def convert(input_file,
         the date and time the subject was born
     subject_description : string
         important information specific to this subject that differentiates it from other members of it's species
+    subject_genotype : string
+        the genetic strain of this species.
     subject_sex : string
         Male or Female
     subject_weight :
@@ -109,6 +112,7 @@ def convert(input_file,
     experiment_subject = Subject(subject_id=subject_id,
                                  species=subject_species,
                                  description=subject_description,
+                                 genotype=subject_genotype,
                                  date_of_birth=subject_date_of_birth,
                                  weight=subject_weight,
                                  sex=subject_sex)
@@ -170,7 +174,7 @@ def convert(input_file,
                                   data=np.ravel(matfile['lickx']),
                                   timestamps=np.ravel(matfile['lickt']),
                                   unit='centimeter',
-                                  description = 'Subject position in virtual hallway during the lick.')
+                                  description='Subject position in virtual hallway during the lick.')
     nwbfile.add_acquisition(lick_events)
 
     # Add the recording device, a neuropixel probe

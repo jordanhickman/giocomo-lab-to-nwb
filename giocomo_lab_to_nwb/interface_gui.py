@@ -86,7 +86,7 @@ class guiMain():
         self.label_subject_id = Label(self.FrameLeft, text='ID:', background="#d3d3d3")
         self.label_subject_id.grid(row=2, column=0, padx=20, pady=0, sticky='ne')
         self.enter_subject_id = Entry(self.FrameLeft, width=40,
-                                      textvariable=StringVar(value='L5'))
+                                      textvariable=StringVar(value='I5'))
         self.enter_subject_id.config(font='Helvetica 10 italic', state='normal')
         self.enter_subject_id.grid(row=2, column=1, padx=(0, 0), pady=0, sticky="senw")
 
@@ -105,7 +105,6 @@ class guiMain():
         self.selected_dob.grid(row=3, column=1, padx=80, pady=0, sticky='nsw')
 
         # Subject Information - Description
-        #default_desc = 'Probe: +/-3.3mm ML, 0.2mm A of sinus, then as deep as possible'
         default_desc = 'naive'
         self.label_subject_desc = Label(self.FrameLeft, text='Description:', background="#d3d3d3")
         self.label_subject_desc.grid(row=4, column=0, padx=20, pady=0, sticky='sne')
@@ -114,28 +113,44 @@ class guiMain():
         self.enter_subject_desc.config(font='Helvetica 10 italic', state='normal')
         self.enter_subject_desc.grid(row=4, column=1, padx=(0, 0), pady=5, sticky="senw")
 
+        # Subject Information - Genotype
+        self.label_subject_genotype = Label(self.FrameLeft, text='Genotype:', background="#d3d3d3")
+        self.label_subject_genotype.grid(row=5, column=0, padx=20, pady=0, sticky='sne')
+        with open("genotype.txt", "r") as original:
+            self.genotype_choices = []
+            for line in original:
+                line = line.strip('\n')
+                self.genotype_choices.append(line)
+        self.genotype_var = StringVar(value=self.genotype_choices[0])
+        self.genotype_var.set(self.genotype_choices[0])
+        self.select_genotype = OptionMenu(self.FrameLeft, self.genotype_var, *self.genotype_choices)
+        self.select_genotype.configure(width=20, height=1)
+        self.select_genotype.grid(row=5, column=1, padx=(0, 0), pady=5, sticky="snw")
+        self.edit_genotype_button = Button(self.FrameLeft, text=" Add ", command=self.button_add_brain, background="#d3d3d3")
+        self.edit_genotype_button.grid(row=5, column=1, padx=0, pady=5, sticky='NES')
+
         # Subject Information - Sex
         self.label_subject_sex = Label(self.FrameLeft, text='Sex:', background="#d3d3d3")
-        self.label_subject_sex.grid(row=5, column=0, padx=20, pady=5, sticky='sne')
+        self.label_subject_sex.grid(row=6, column=0, padx=20, pady=5, sticky='sne')
         self.sex_var = StringVar(value="Male")
         self.select_sex = Radiobutton(self.FrameLeft, text="Male", background="#d3d3d3",
                                       variable=self.sex_var, value="Male")
-        self.select_sex.grid(row=5, pady=5, padx=20, column=1, sticky="W")
+        self.select_sex.grid(row=6, pady=6, padx=20, column=1, sticky="W")
         self.select_sex = Radiobutton(self.FrameLeft, text="Female", background="#d3d3d3", variable=self.sex_var,
                                       value="Female")
-        self.select_sex.grid(row=5, pady=5, padx=80, column=1, sticky="W")
+        self.select_sex.grid(row=6, pady=6, padx=80, column=1, sticky="W")
 
         # Subject Information - Weight
         self.label_subject_weight = Label(self.FrameLeft, text='Weight (grams):', background="#d3d3d3")
-        self.label_subject_weight.grid(row=6, column=0, padx=20, pady=0, sticky='sne')
+        self.label_subject_weight.grid(row=7, column=0, padx=20, pady=0, sticky='sne')
         self.enter_subject_weight = Entry(self.FrameLeft, width=10,
                                           textvariable=IntVar(value=""))
         self.enter_subject_weight.config(font='Helvetica 10 italic', state='normal')
-        self.enter_subject_weight.grid(row=6, column=1, padx=(0, 0), pady=5, sticky="snw")
+        self.enter_subject_weight.grid(row=7, column=1, padx=(0, 0), pady=5, sticky="snw")
 
         #Subject Information- Species
         self.label_subject_species = Label(self.FrameLeft, text='Species:', background="#d3d3d3")
-        self.label_subject_species.grid(row=7, column=0, padx=20, pady=0, sticky='sne')
+        self.label_subject_species.grid(row=8, column=0, padx=20, pady=0, sticky='sne')
         with open("species.txt", "r") as original:
             self.species_choices = []
             for line in original:
@@ -145,14 +160,14 @@ class guiMain():
         self.select_species = OptionMenu(self.FrameLeft, self.species_var, *self.species_choices)
         self.species_var.set(self.species_choices[0])
         self.select_species.configure(width=15,height=1)
-        self.select_species.grid(row=7, column=1, padx=(0, 0), pady=0, sticky="snw")
+        self.select_species.grid(row=8, column=1, padx=(0, 0), pady=0, sticky="snw")
         self.edit_species_button = Button(self.FrameLeft, text=" Add ", command=self.button_add_species,
                                              background="#d3d3d3")
-        self.edit_species_button.grid(row=7, column=1, padx=0, pady=0, sticky='NES')
+        self.edit_species_button.grid(row=8, column=1, padx=0, pady=0, sticky='NES')
 
         # Subject Information - Brain Region
         self.label_subject_brain = Label(self.FrameLeft, text='Brain Region:', background="#d3d3d3")
-        self.label_subject_brain.grid(row=8, column=0, padx=20, pady=0, sticky='sne')
+        self.label_subject_brain.grid(row=9, column=0, padx=20, pady=0, sticky='sne')
         with open("brain_regions.txt", "r") as original:
             self.brain_choices = []
             for line in original:
@@ -162,29 +177,29 @@ class guiMain():
         self.brain_var.set(self.brain_choices[0])
         self.select_brain = OptionMenu(self.FrameLeft, self.brain_var, *self.brain_choices)
         self.select_brain.configure(width=20, height=1)
-        self.select_brain.grid(row=8, column=1, padx=(0, 0), pady=5, sticky="snw")
+        self.select_brain.grid(row=9, column=1, padx=(0, 0), pady=5, sticky="snw")
         self.edit_brain_button = Button(self.FrameLeft, text=" Add ", command=self.button_add_brain, background="#d3d3d3")
-        self.edit_brain_button.grid(row=8, column=1, padx=0, pady=5, sticky='NES')
+        self.edit_brain_button.grid(row=9, column=1, padx=0, pady=5, sticky='NES')
 
         # Subject Information - Surgery
         surgery_default_desc = 'Probe: +/-3.3mm ML, 0.2mm A of sinus, then as deep as possible'
         self.label_subject_surgery = Label(self.FrameLeft, text='Surgery:', background="#d3d3d3")
-        self.label_subject_surgery.grid(row=9, column=0, padx=20, pady=0, sticky='sne')
+        self.label_subject_surgery.grid(row=10, column=0, padx=20, pady=0, sticky='sne')
         self.enter_subject_surgery = Entry(self.FrameLeft, width=40, textvariable=StringVar(value=surgery_default_desc))
         self.enter_subject_surgery.config(font='Helvetica 10 italic', state='normal')
-        self.enter_subject_surgery.grid(row=9, column=1, padx=(0, 0), pady=5, sticky="senw")
+        self.enter_subject_surgery.grid(row=10, column=1, padx=(0, 0), pady=5, sticky="senw")
 
 
         # Session Information
         self.label_session = Label(self.FrameLeft, text='Session Information:', background="#d3d3d3")
-        self.label_session.grid(row=10, column=0, padx=20, pady=(10, 0), sticky='snw')
+        self.label_session.grid(row=11, column=0, padx=20, pady=(10, 0), sticky='snw')
 
         # Session Information - ID
         self.label_session_id = Label(self.FrameLeft, text='ID:', background="#d3d3d3")
-        self.label_session_id.grid(row=11, column=0, padx=20, pady=0, sticky='sne')
+        self.label_session_id.grid(row=12, column=0, padx=20, pady=0, sticky='sne')
         self.enter_session_id = Entry(self.FrameLeft, width=32, textvariable=StringVar(value='npI5_0417_baseline_1'))
         self.enter_session_id.config(font='Helvetica 10 italic', state='normal')
-        self.enter_session_id.grid(row=11, column=1, padx=(0, 0), pady=5, sticky="senw")
+        self.enter_session_id.grid(row=12, column=1, padx=(0, 0), pady=5, sticky="senw")
 
         today = datetime.date.today()
         datetime_session = datetime.datetime(2017, 4, 4, 0, 0, 0)
@@ -192,16 +207,16 @@ class guiMain():
         self.datetime_session = datetime_session_tz
         self.session_iso = datetime_session_tz.isoformat()
         self.label_session = Label(self.FrameLeft, text='Start Date & Time:', background="#d3d3d3")
-        self.label_session.grid(row=12, column=0, padx=20, pady=0, sticky='sne')
+        self.label_session.grid(row=13, column=0, padx=20, pady=0, sticky='sne')
         self.session_button = Button(self.FrameLeft, text="Select", command=self.session_picker, background="#d3d3d3")
-        self.session_button.grid(row=12, column=1, padx=0, pady=5, sticky='NWS')
+        self.session_button.grid(row=13, column=1, padx=0, pady=5, sticky='NWS')
         self.session_date = Label(self.FrameLeft, text=self.session_iso, background="#d3d3d3", font='Helvetica 10 italic')
-        self.session_date.grid(row=12, column=1, padx=80, pady=0, sticky='nsw')
+        self.session_date.grid(row=13, column=1, padx=80, pady=0, sticky='nsw')
 
 
         #Session - Experimenter
         self.label_session_exp = Label(self.FrameLeft, text='Experimenter:', background="#d3d3d3")
-        self.label_session_exp.grid(row=15, column=0, padx=20, pady=0, sticky='sne')
+        self.label_session_exp.grid(row=16, column=0, padx=20, pady=0, sticky='sne')
         with open("experimenters.txt", "r") as original:
             self.experimenter_choices = []
             for line in original:
@@ -210,39 +225,39 @@ class guiMain():
         self.experimenter_var = StringVar(value = self.experimenter_choices[0])
         self.select_experimenter = OptionMenu(self.FrameLeft, self.experimenter_var, *self.experimenter_choices)
         self.select_experimenter.config(width=20)
-        self.select_experimenter.grid(row=15, column=1, padx=(0, 0), pady=5, sticky="swn")
+        self.select_experimenter.grid(row=16, column=1, padx=(0, 0), pady=5, sticky="swn")
         self.edit_experimenter_button = Button(self.FrameLeft, text=" Add ", command=self.button_add_experimenter, background="#d3d3d3")
-        self.edit_experimenter_button.grid(row=15, column=1, padx=0, pady=5, sticky='NES')
+        self.edit_experimenter_button.grid(row=16, column=1, padx=0, pady=5, sticky='NES')
 
         # Session - Description
         self.label_session_desc = Label(self.FrameLeft, text='Description:', background="#d3d3d3")
-        self.label_session_desc.grid(row=16, column=0, padx=20, pady=0, sticky='sne')
+        self.label_session_desc.grid(row=17, column=0, padx=20, pady=0, sticky='sne')
         self.description_var = StringVar(value="Virtual Hallway Task")
         self.description_choices = ['Virtual Hallway Task']
         self.select_description = OptionMenu(self.FrameLeft, self.description_var, *self.description_choices)
         self.select_description.config(width=20)
-        self.select_description.grid(row=16, column=1, padx=(0, 0), pady=5, sticky="snw")
+        self.select_description.grid(row=17, column=1, padx=(0, 0), pady=5, sticky="snw")
         self.edit_descr_button = Button(self.FrameLeft, text=" Add ", command=self.button_add_description, background="#d3d3d3")
-        self.edit_descr_button.grid(row=16, column=1, padx=0, pady=5 , sticky='NES')
+        self.edit_descr_button.grid(row=17, column=1, padx=0, pady=5 , sticky='NES')
 
         # Session - Lab
         self.label_session_lab = Label(self.FrameLeft, text='Lab:', background="#d3d3d3")
-        self.label_session_lab.grid(row=17, column=0, padx=20, pady=0, sticky='sne')
+        self.label_session_lab.grid(row=18, column=0, padx=20, pady=0, sticky='sne')
         self.enter_session_lab = Entry(self.FrameLeft, width=32,
                                       textvariable=StringVar(value='Giocomo Lab'))
         self.enter_session_lab.config(font='Helvetica 10 italic', state='normal')
-        self.enter_session_lab.grid(row=17, column=1, padx=(0, 0), pady=5, sticky="senw")
+        self.enter_session_lab.grid(row=18, column=1, padx=(0, 0), pady=5, sticky="senw")
 
         # Session - Institution
         self.label_session_inst = Label(self.FrameLeft, text='Institution:', background="#d3d3d3")
-        self.label_session_inst.grid(row=18, column=0, padx=20, pady=0, sticky='sne')
+        self.label_session_inst.grid(row=19, column=0, padx=20, pady=0, sticky='sne')
         self.enter_session_inst = Entry(self.FrameLeft, width=32,
                                      textvariable=StringVar(value='Stanford University School of Medicine'))
         self.enter_session_inst.config(font='Helvetica 10 italic', state='normal')
-        self.enter_session_inst.grid(row=18, column=1, padx=(0, 0), pady=5, sticky="senw")
+        self.enter_session_inst.grid(row=19, column=1, padx=(0, 0), pady=5, sticky="senw")
 
         self.run_button = Button(self.FrameLeft, text="RUN", command=self.button_run, background = "#d3d3d3")
-        self.run_button.grid(row=19, column=1, padx=30, pady=(20,20), sticky='NESW')
+        self.run_button.grid(row=20, column=1, padx=30, pady=(20,20), sticky='NESW')
 
 
 
@@ -266,7 +281,7 @@ class guiMain():
         date_dob = self.cal_dob.selection_get()
         datetime_dob = datetime.datetime(date_dob.year, date_dob.month, date_dob.day, 0, 0, 0)
         datetime_dob_tz = timezone_cali.localize(datetime_dob)
-        self.datetime_dob = datetime_dob
+        self.datetime_dob = datetime_dob_tz
         self.dob_iso = datetime_dob_tz.isoformat()
         self.selected_dob.config(text=str(self.dob_iso))
         self.dob_date_picker.destroy()
@@ -440,6 +455,7 @@ class guiMain():
             "subject_id": self.enter_subject_id.get(),
             "subject_date_of_birth": self.datetime_dob,
             "subject_description": self.enter_subject_desc.get(),
+            "subject_genotype": self.genotype_var.get(),
             "subject_sex": self.sex_var.get(),
             "subject_weight": self.enter_subject_weight.get(),
             "surgery": self.enter_subject_surgery.get(),
@@ -454,7 +470,6 @@ class guiMain():
 
         }
 
-        print(self.gio_dict["subject_id"])
         conversion.convert(**self.gio_dict)
 
 
