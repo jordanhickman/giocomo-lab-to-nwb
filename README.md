@@ -22,15 +22,20 @@ After activating the correct environment, the conversion function can be used in
 Here's an example: we'll grab SpikeGLX data from `.imec0.ap.bin` files and convert it to a `.nwb` file.
 ```python
 from giocomo_lab_to_nwb.conversion_tools.conversion_module import conversion_function
+import yaml
 
 source_paths = {}
 source_paths['spikeglx data'] = {'type': 'file', 'path': 'G4_190620_keicontrasttrack_10secBaseline1_g0_t0.imec0.ap.bin'}
 f_nwb = 'output.nwb'
+
+# Load metadata from YAML file
 metafile = 'metafile.yml'
+with open(metafile) as f:
+   metadata = yaml.safe_load(f)
 
 conversion_function(source_paths=source_paths,
                     f_nwb=f_nwb,
-                    metafile=metafile)
+                    metadata=metadata)
 ```
 <br/>
 
