@@ -78,6 +78,7 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
 # If called directly fom terminal
 if __name__ == '__main__':
     import sys
+    import yaml
 
     if len(sys.argv) < 4:
         print('Error: Please provide source files, nwb file name and metafile.')
@@ -85,7 +86,12 @@ if __name__ == '__main__':
     source_paths = {}
     source_paths['spikeglx data'] = {'type': 'file', 'path': sys.argv[1]}
     f_nwb = sys.argv[2]
+
+    # Load metadata from YAML file
     metafile = sys.argv[3]
+    with open(metafile) as f:
+       metadata = yaml.safe_load(f)
+
     conversion_function(source_paths=source_paths,
                         f_nwb=f_nwb,
-                        metafile=metafile)
+                        metadata=metadata)
