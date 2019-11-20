@@ -32,6 +32,7 @@ NWBFile:
     raw_data_dtype: 'int16'
     high_pass_filtered: True
     movie_start_time: 15.6
+    subject_brain_region: Medial Entorhinal Cortex
   notes: ''
   pharmacology: ''
   protocol: ''
@@ -40,11 +41,11 @@ NWBFile:
   session_id: ADDME
   session_start_time: 2017-04-04 10:00:00
   surgery: (probe) +/-3.3mm ML, 0.2mm A of sinus, then as deep as possible
-  subject:
-    description: naive
-    genotype: wild-type
-    sex: Male
-    species: Mus musculus
-    subject_id: I5
-    weight: 11.6
-    date_of_birth: 2016-04-04 00:15:00
+Subject:
+  description: naive
+  genotype: wild-type
+  sex: Male
+  species: Mus musculus
+  subject_id: I5
+  weight: '11.6g'
+  date_of_birth: 2016-04-04 00:15:00
