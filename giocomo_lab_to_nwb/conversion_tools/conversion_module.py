@@ -235,30 +235,32 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
 
     # Add other fields
     # Add lab_meta_data
-    lab_metadata = LabMetaData_ext(
-        name=metadata['NWBFile']['lab_meta_data']['name'],
-        acquisition_sampling_rate=metadata['NWBFile']['lab_meta_data']['acquisition_sampling_rate'],
-        number_of_electrodes=metadata['NWBFile']['lab_meta_data']['number_of_electrodes'],
-        file_path=metadata['NWBFile']['lab_meta_data']['file_path'],
-        bytes_to_skip=metadata['NWBFile']['lab_meta_data']['bytes_to_skip'],
-        raw_data_dtype=metadata['NWBFile']['lab_meta_data']['raw_data_dtype'],
-        high_pass_filtered=metadata['NWBFile']['lab_meta_data']['high_pass_filtered'],
-        movie_start_time=metadata['NWBFile']['lab_meta_data']['movie_start_time'],
-        subject_brain_region=metadata['NWBFile']['lab_meta_data']['subject_brain_region']
-    )
-    nwbfile.add_lab_meta_data(lab_metadata)
+    if 'lab_meta_data' in metadata['NWBFile']:
+        lab_metadata = LabMetaData_ext(
+            name=metadata['NWBFile']['lab_meta_data']['name'],
+            acquisition_sampling_rate=metadata['NWBFile']['lab_meta_data']['acquisition_sampling_rate'],
+            number_of_electrodes=metadata['NWBFile']['lab_meta_data']['number_of_electrodes'],
+            file_path=metadata['NWBFile']['lab_meta_data']['file_path'],
+            bytes_to_skip=metadata['NWBFile']['lab_meta_data']['bytes_to_skip'],
+            raw_data_dtype=metadata['NWBFile']['lab_meta_data']['raw_data_dtype'],
+            high_pass_filtered=metadata['NWBFile']['lab_meta_data']['high_pass_filtered'],
+            movie_start_time=metadata['NWBFile']['lab_meta_data']['movie_start_time'],
+            subject_brain_region=metadata['NWBFile']['lab_meta_data']['subject_brain_region']
+        )
+        nwbfile.add_lab_meta_data(lab_metadata)
 
     # add information about the subject of the experiment
-    experiment_subject = Subject(
-        subject_id=metadata['Subject']['subject_id'],
-        species=metadata['Subject']['species'],
-        description=metadata['Subject']['description'],
-        genotype=metadata['Subject']['genotype'],
-        date_of_birth=metadata['Subject']['date_of_birth'],
-        weight=metadata['Subject']['weight'],
-        sex=metadata['Subject']['sex']
-    )
-    nwbfile.subject = experiment_subject
+    if 'Subject' in metadata:
+        experiment_subject = Subject(
+            subject_id=metadata['Subject']['subject_id'],
+            species=metadata['Subject']['species'],
+            description=metadata['Subject']['description'],
+            genotype=metadata['Subject']['genotype'],
+            date_of_birth=metadata['Subject']['date_of_birth'],
+            weight=metadata['Subject']['weight'],
+            sex=metadata['Subject']['sex']
+        )
+        nwbfile.subject = experiment_subject
 
     # If adding SpikeGLX data
     if add_spikeglx:
