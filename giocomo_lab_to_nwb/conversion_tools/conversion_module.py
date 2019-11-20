@@ -81,63 +81,67 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
                               stop_time=trial_times[-1],
                               trial_contrast=matfile['trial_contrast'][num-1][0])
 
-        # Add mouse position inside
-        position = Position()
-        position_virtual = np.ravel(matfile['posx'])
+        # Add mouse position
+        position = Position(name=metadata['Behavior']['Position']['name'])
+        meta_pos_names = [sps['name'] for sps in metadata['Behavior']['Position']['spatial_series']]
 
         # Position inside the virtual environment
+        pos_vir_meta_ind = meta_pos_names.index('VirtualPosition')
+        meta_vir = metadata['Behavior']['Position']['spatial_series'][pos_vir_meta_ind]
+        position_virtual = np.ravel(matfile['posx'])
         sampling_rate = 1/(position_time[1] - position_time[0])
         position.create_spatial_series(
-            name='Position',
+            name=meta_vir['name'],
             data=position_virtual,
             starting_time=position_time[0],
             rate=sampling_rate,
-            reference_frame='The start of the trial, which begins at the start of the virtual hallway.',
-            conversion=0.01,
-            description='Subject position in the virtual hallway.',
-            comments='The values should be >0 and <400cm. Values greater than '
-                     '400cm mean that the mouse briefly exited the maze.'
+            reference_frame=meta_vir['reference_frame'],
+            conversion=meta_vir['conversion'],
+            description=meta_vir['description'],
+            comments=meta_vir['comments']
             )
 
         # Physical position on the mouse wheel
+        pos_phys_meta_ind = meta_pos_names.index('PhysicalPosition')
+        meta_phys = metadata['Behavior']['Position']['spatial_series'][pos_phys_meta_ind]
         physical_posx = position_virtual
         trial_gain = np.ravel(matfile['trial_gain'])
         for num in trial_nums:
             physical_posx[trial == num] = physical_posx[trial == num]/trial_gain[num-1]
         position.create_spatial_series(
-            name='PhysicalPosition',
+            name=meta_phys['name'],
             data=physical_posx,
             starting_time=position_time[0],
             rate=sampling_rate,
-            reference_frame='Location on wheel re-referenced to zero at the start of each trial.',
-            conversion=0.01,
-            description='Physical location on the wheel measured since the beginning of the trial.',
-            comments='Physical location found by dividing the virtual position by the "trial_gain"'
+            reference_frame=meta_phys['reference_frame'],
+            conversion=meta_phys['conversion'],
+            description=meta_phys['description'],
+            comments=meta_phys['comments']
         )
 
         nwbfile.add_acquisition(position)
 
         # Add timing of lick events, as well as mouse's virtual position during lick event
-        lick_events = BehavioralEvents()
+        lick_events = BehavioralEvents(name=metadata['Behavior']['BehavioralEvents']['name'])
+        meta_ts = metadata['Behavior']['BehavioralEvents']['time_series']
         lick_events.create_timeseries(
-            name='LickEvents',
+            name=meta_ts['name'],
             data=np.ravel(matfile['lickx']),
             timestamps=np.ravel(matfile['lickt']),
-            unit='centimeter',
-            description='Subject position in virtual hallway during the lick.'
+            unit=meta_ts['unit'],
+            description=meta_ts['description']
         )
 
         nwbfile.add_acquisition(lick_events)
 
         # Add the recording device, a neuropixel probe
-        recording_device = nwbfile.create_device(name='neuropixel_probes')
-        electrode_group_description = 'single neuropixels probe http://www.open-ephys.org/neuropixelscorded'
-        electrode_group_name = 'probe1'
-        electrode_group_location = 'medial entorhinal cortex'
+        recording_device = nwbfile.create_device(name=metadata['Ecephys']['Device'][0]['name'])
+
+        # Add ElectrodeGroup
         electrode_group = nwbfile.create_electrode_group(
-            name=electrode_group_name,
-            description=electrode_group_description,
-            location=metadata['NWBFile']['lab_meta_data']['subject_brain_region'],
+            name=metadata['Ecephys']['ElectrodeGroup'][0]['name'],
+            description=metadata['Ecephys']['ElectrodeGroup'][0]['description'],
+            location=metadata['Ecephys']['ElectrodeGroup'][0]['location'],
             device=recording_device
         )
 
@@ -226,7 +230,6 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
             name='ecephys',
             description='units assigned during automatic spike sorting'
         )
-
         # add template_units table to processing module
         spike_template_module.add(template_units)
 
