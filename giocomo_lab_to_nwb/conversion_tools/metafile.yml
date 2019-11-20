@@ -14,10 +14,10 @@ Ecephys:
     name: ElectrodeGroup
 NWBFile:
   data_collection: ''
-  experiment_description: ADDME
-  experimenter: Name
+  experiment_description: Virtual Hallway Task
+  experimenter: Kei Masuda
   identifier: ABC123
-  institution: My University
+  institution: Stanford University School of Medicine
   keywords:
   - kw1
   - kw2
@@ -38,8 +38,13 @@ NWBFile:
   related_publications: ''
   session_description: session_description
   session_id: ADDME
-  session_start_time: 2019-09-16 17:10:00
-  slices: ''
-  stimulus_notes: ''
-  surgery: ''
-  virus: ''
+  session_start_time: 2017-04-04 10:00:00
+  surgery: (probe) +/-3.3mm ML, 0.2mm A of sinus, then as deep as possible
+  subject:
+    description: naive
+    genotype: wild-type
+    sex: Male
+    species: Mus musculus
+    subject_id: I5
+    weight: 11.6
+    date_of_birth: 2016-04-04 00:15:00

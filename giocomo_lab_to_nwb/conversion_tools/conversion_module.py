@@ -52,22 +52,34 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
     # Save content to NWB file
     extractor.save(to_path=f_nwb)
 
-    # Add lab_meta_data to file
-    io = pynwb.NWBHDF5IO(f_nwb, 'a')
-    nwb = io.read()
-    lab_metadata = LabMetaData_ext(
-        name=metadata['NWBFile']['lab_meta_data']['name'],
-        acquisition_sampling_rate=metadata['NWBFile']['lab_meta_data']['acquisition_sampling_rate'],
-        number_of_electrodes=metadata['NWBFile']['lab_meta_data']['number_of_electrodes'],
-        file_path=metadata['NWBFile']['lab_meta_data']['file_path'],
-        bytes_to_skip=metadata['NWBFile']['lab_meta_data']['bytes_to_skip'],
-        raw_data_dtype=metadata['NWBFile']['lab_meta_data']['raw_data_dtype'],
-        high_pass_filtered=metadata['NWBFile']['lab_meta_data']['high_pass_filtered'],
-        movie_start_time=metadata['NWBFile']['lab_meta_data']['movie_start_time'],
-    )
-    nwb.add_lab_meta_data(lab_metadata)
-    io.write(nwb)
-    io.close()
+    # Add other fields
+    with pynwb.NWBHDF5IO(f_nwb, 'a') as io:
+        nwb = io.read()
+
+        # Add lab_meta_data
+        lab_metadata = LabMetaData_ext(
+            name=metadata['NWBFile']['lab_meta_data']['name'],
+            acquisition_sampling_rate=metadata['NWBFile']['lab_meta_data']['acquisition_sampling_rate'],
+            number_of_electrodes=metadata['NWBFile']['lab_meta_data']['number_of_electrodes'],
+            file_path=metadata['NWBFile']['lab_meta_data']['file_path'],
+            bytes_to_skip=metadata['NWBFile']['lab_meta_data']['bytes_to_skip'],
+            raw_data_dtype=metadata['NWBFile']['lab_meta_data']['raw_data_dtype'],
+            high_pass_filtered=metadata['NWBFile']['lab_meta_data']['high_pass_filtered'],
+            movie_start_time=metadata['NWBFile']['lab_meta_data']['movie_start_time'],
+        )
+        nwb.add_lab_meta_data(lab_metadata)
+
+        # add information about the subject of the experiment
+        experiment_subject = Subject(subject_id=metadata['NWBFile']['subject']['subject_id'],
+                                     species=metadata['NWBFile']['subject']['species'],
+                                     description=metadata['NWBFile']['subject']['description'],
+                                     genotype=metadata['NWBFile']['subject']['genotype'],
+                                     date_of_birth=metadata['NWBFile']['subject']['date_of_birth'],
+                                     weight=metadata['NWBFile']['subject']['weight'],
+                                     sex=metadata['NWBFile']['subject']['sex'])
+        nwb.subject = experiment_subject
+
+        io.write(nwb)
 
     # Check file was saved and inform on screen
     print('File saved at:')
