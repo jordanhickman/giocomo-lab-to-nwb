@@ -1,15 +1,16 @@
 import uuid
 from datetime import datetime
+import yaml
 
 import hdf5storage
 import numpy as np
 import pytz
 import sys
-import interface_config
 from pynwb import NWBFile, NWBHDF5IO
 from pynwb.misc import Units
 from pynwb.file import Subject
 from pynwb.behavior import Position, BehavioralEvents
+
 
 def convert(input_file,
             session_start_time,
@@ -85,11 +86,11 @@ def convert(input_file,
     create_date_tz = timezone_cali.localize(create_date)
 
     # if loading data from config.yaml, convert string dates into datetime
-    if isinstance(session_start_time,str):
+    if isinstance(session_start_time, str):
         session_start_time = datetime.strptime(session_start_time, '%B %d, %Y %I:%M%p')
         session_start_time = timezone_cali.localize(session_start_time)
 
-    if isinstance(subject_date_of_birth,str):
+    if isinstance(subject_date_of_birth, str):
         subject_date_of_birth = datetime.strptime(subject_date_of_birth, '%B %d, %Y %I:%M%p')
         subject_date_of_birth = timezone_cali.localize(subject_date_of_birth)
 
@@ -202,16 +203,16 @@ def convert(input_file,
 
     # create electrode columns for the x,y location on the neuropixel  probe
     # the standard x,y,z locations are reserved for Allen Brain Atlas location
-    nwbfile.add_electrode_column('relativex','electrode x-location on the probe')
-    nwbfile.add_electrode_column('relativey','electrode y-location on the probe')
+    nwbfile.add_electrode_column('rel_x', 'electrode x-location on the probe')
+    nwbfile.add_electrode_column('rel_y', 'electrode y-location on the probe')
 
     for idx in recording_electrodes:
         nwbfile.add_electrode(idx,
                               x=np.nan,
                               y=np.nan,
                               z=np.nan,
-                              relativex=float(xcoords[idx]),
-                              relativey=float(ycoords[idx]),
+                              rel_x=float(xcoords[idx]),
+                              rel_y=float(ycoords[idx]),
                               imp=np.nan,
                               location='medial entorhinal cortex',
                               filtering=filter_desc,
@@ -238,7 +239,6 @@ def convert(input_file,
                          quality=cluster_quality[i],
                          waveform_mean=waveforms,
                          electrode_group=electrode_group)
-
 
     # Trying to add another Units table to hold the results of the automatic spike sorting
     # create TemplateUnits units table
@@ -275,6 +275,23 @@ def convert(input_file,
         io.write(nwbfile)
         print('saved', outpath)
 
+
+def read_yaml(config_file='config.yaml'):
+    with open(config_file, 'r') as input_file:
+        results = yaml_as_python(input_file)
+        for experiment_info in results:
+            print('converting', experiment_info['input_file'])
+            convert(**experiment_info)
+
+
+def yaml_as_python(val):
+    """Convert YAML to dict"""
+    try:
+        return yaml.safe_load_all(val)
+    except yaml.YAMLError as exc:
+        return exc
+
+
 if __name__ == '__main__':
     '''
     To run conversion:
@@ -288,7 +305,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         # this indicates conversion.py being called from terminal
         config_file_path = sys.argv[1]
-        interface_config.read_yaml(config_file_path)
+        read_yaml(config_file_path)
     else:
         # indicates __main__ being run inside editor
-        interface_config.read_yaml()
+        read_yaml()
