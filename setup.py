@@ -22,5 +22,6 @@ setup(
                       'pytz',
                       'uuid',
                       'tkcalendar',
-                      'PyYAML']
+                      'PyYAML',
+                      'nwbn_conversion_tools']
 )
