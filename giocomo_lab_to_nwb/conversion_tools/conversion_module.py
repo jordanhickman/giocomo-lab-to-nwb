@@ -3,7 +3,11 @@
 # written for Giocomo Lab
 # ------------------------------------------------------------------------------
 from nwbn_conversion_tools.ephys.acquisition.spikeglx.spikeglx import Spikeglx2NWB
+from ndx_labmetadata_giocomo import LabMetaData_ext
+import pynwb
+
 import yaml
+import copy
 import os
 
 
@@ -24,10 +28,6 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
         Extra keyword arguments.
     """
 
-    # Load metadata from YAML file
-    #with open(metafile) as f:
-    #    metadata = yaml.safe_load(f)
-
     # Source files
     npx_file = None
     for k, v in source_paths.items():
@@ -35,8 +35,13 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
             if k == 'spikeglx data':
                 npx_file = source_paths[k]['path']
 
+    # Remove lab_meta_data from metadata, it will be added later
+    # Spikeglx2NWB cannot manipulate custom nwb extensions
+    metadata0 = copy.deepcopy(metadata)
+    metadata0['NWBFile'].pop('lab_meta_data', None)
+
     # Create extractor for SpikeGLX data
-    extractor = Spikeglx2NWB(nwbfile=None, metadata=metadata, npx_file=npx_file)
+    extractor = Spikeglx2NWB(nwbfile=None, metadata=metadata0, npx_file=npx_file)
 
     # Add acquisition data
     extractor.add_acquisition(es_name='ElectricalSeries', metadata=metadata['Ecephys'])
@@ -47,6 +52,23 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
     # Save content to NWB file
     extractor.save(to_path=f_nwb)
 
+    # Add lab_meta_data to file
+    io = pynwb.NWBHDF5IO(f_nwb, 'a')
+    nwb = io.read()
+    lab_metadata = LabMetaData_ext(
+        name=metadata['NWBFile']['lab_meta_data']['name'],
+        acquisition_sampling_rate=metadata['NWBFile']['lab_meta_data']['acquisition_sampling_rate'],
+        number_of_electrodes=metadata['NWBFile']['lab_meta_data']['number_of_electrodes'],
+        file_path=metadata['NWBFile']['lab_meta_data']['file_path'],
+        bytes_to_skip=metadata['NWBFile']['lab_meta_data']['bytes_to_skip'],
+        raw_data_dtype=metadata['NWBFile']['lab_meta_data']['raw_data_dtype'],
+        high_pass_filtered=metadata['NWBFile']['lab_meta_data']['high_pass_filtered'],
+        movie_start_time=metadata['NWBFile']['lab_meta_data']['movie_start_time'],
+    )
+    nwb.add_lab_meta_data(lab_metadata)
+    io.write(nwb)
+    io.close()
+
     # Check file was saved and inform on screen
     print('File saved at:')
     print(f_nwb)
@@ -56,6 +78,7 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
 # If called directly fom terminal
 if __name__ == '__main__':
     import sys
+    import yaml
 
     if len(sys.argv) < 4:
         print('Error: Please provide source files, nwb file name and metafile.')
@@ -63,7 +86,12 @@ if __name__ == '__main__':
     source_paths = {}
     source_paths['spikeglx data'] = {'type': 'file', 'path': sys.argv[1]}
     f_nwb = sys.argv[2]
+
+    # Load metadata from YAML file
     metafile = sys.argv[3]
+    with open(metafile) as f:
+       metadata = yaml.safe_load(f)
+
     conversion_function(source_paths=source_paths,
                         f_nwb=f_nwb,
-                        metafile=metafile)
+                        metadata=metadata)
