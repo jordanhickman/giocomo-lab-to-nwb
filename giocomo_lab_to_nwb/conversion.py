@@ -119,21 +119,27 @@ def convert(input_file,
                                  date_of_birth=subject_date_of_birth,
                                  weight=subject_weight,
                                  sex=subject_sex)
-
     nwbfile.subject = experiment_subject
 
-    # adding constants
-    # Creates LabMetaData container
-    #lab_metadata = LabMetaData_ext(
-    #    name='LabMetaData',
-    #   acquisition_sampling_rate=1000.,
-    #    number_of_electrodes=10,
-    #    file_path='',
-    #    bytes_to_skip=2,
-    #    raw_data_dtype='int16',
-    #    high_pass_filtered=False
-    #)
-
+    # adding constants via LabMetaData container
+    # constants
+    sample_rate = float(matfile['sp'][0]['sample_rate'][0][0][0])
+    n_channels_dat = int(matfile['sp'][0]['n_channels_dat'][0][0][0])
+    dat_path = matfile['sp'][0]['dat_path'][0][0][0]
+    offset = int(matfile['sp'][0]['offset'][0][0][0])
+    data_dtype = matfile['sp'][0]['dtype'][0][0][0]
+    hp_filtered = bool(matfile['sp'][0]['hp_filtered'][0][0][0])
+    vr_session_offset = matfile['sp'][0]['vr_session_offset'][0][0][0]
+    # container
+    lab_metadata = LabMetaData_ext(name='LabMetaData',
+                                   acquisition_sampling_rate=sample_rate,
+                                   number_of_electrodes=n_channels_dat,
+                                   file_path=dat_path,
+                                   bytes_to_skip=offset,
+                                   raw_data_dtype=data_dtype,
+                                   high_pass_filtered=hp_filtered,
+                                   movie_start_time=vr_session_offset)
+    nwbfile.add_lab_meta_data(lab_metadata)
 
     # Adding trial information
     nwbfile.add_trial_column('trial_contrast', 'visual contrast of the maze through which the mouse is running')
@@ -194,15 +200,13 @@ def convert(input_file,
     nwbfile.add_acquisition(lick_events)
 
     # Add information on the visual stimulus that was shown to the subject
-    # assumed rate=60 [Hz]. Update if necessary
-    # assumed number of frames equal to the number of samples in the data. Update if necessary
-    vr_start_time = matfile['sp'][0]['vr_session_offset'][0][0][0]
-    #default_num_frames = iter(np.ravel(matfile['post']).size)
+    # Assumed rate=60 [Hz]. Update if necessary
+    # Update external_file to link to Unity environment file
     visualization = ImageSeries(name='ImageSeries',
                                 unit='seconds',
                                 format='external',
                                 external_file=list(['https://unity.com/VR-and-AR-corner']),
-                                starting_time=vr_start_time,
+                                starting_time=vr_session_offset,
                                 starting_frame=[[0]],
                                 rate=float(60),
                                 description='virtual Unity environment that the mouse navigates through')
@@ -212,7 +216,6 @@ def convert(input_file,
     recording_device = nwbfile.create_device(name='neuropixel_probes')
     electrode_group_description = 'single neuropixels probe http://www.open-ephys.org/neuropixelscorded'
     electrode_group_name = 'probe1'
-    electrode_group_location = 'medial entorhinal cortex'
 
     electrode_group = nwbfile.create_electrode_group(electrode_group_name,
                                                      description=electrode_group_description,
@@ -327,7 +330,6 @@ if __name__ == '__main__':
     To run conversion:
     -function calls with conversion.convert()
     -run interface_gui
-    -run interface_config
     -run conversion.py in the terminal which will calls interface_config and convert the data listed in that file
         e.g. *\PycharmProjects\giocomo-lab-to-nwb\giocomo_lab_to_nwb>conversion.py config.yaml
     '''
