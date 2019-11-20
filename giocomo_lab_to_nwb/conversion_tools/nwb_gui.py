@@ -9,6 +9,14 @@ conversion_module = 'conversion_module.py'
 
 source_paths = {}
 source_paths['spikeglx data'] = {'type': 'file', 'path': ''}
+source_paths['processed data'] = {'type': 'file', 'path': ''}
 
-nwbn_conversion_gui(metafile=metafile, conversion_module=conversion_module,
-                    source_paths=source_paths)
+# Other options
+kwargs = {'spikeglx': True, 'processed': False}
+
+nwbn_conversion_gui(
+    metafile=metafile,
+    conversion_module=conversion_module,
+    source_paths=source_paths,
+    kwargs_fields=kwargs,
+)
