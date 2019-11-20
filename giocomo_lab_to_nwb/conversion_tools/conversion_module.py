@@ -249,26 +249,25 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
     nwbfile.add_lab_meta_data(lab_metadata)
 
     # add information about the subject of the experiment
-    experiment_subject = Subject(subject_id=metadata['Subject']['subject_id'],
-                                 species=metadata['Subject']['species'],
-                                 description=metadata['Subject']['description'],
-                                 genotype=metadata['Subject']['genotype'],
-                                 date_of_birth=metadata['Subject']['date_of_birth'],
-                                 weight=metadata['Subject']['weight'],
-                                 sex=metadata['Subject']['sex'])
+    experiment_subject = Subject(
+        subject_id=metadata['Subject']['subject_id'],
+        species=metadata['Subject']['species'],
+        description=metadata['Subject']['description'],
+        genotype=metadata['Subject']['genotype'],
+        date_of_birth=metadata['Subject']['date_of_birth'],
+        weight=metadata['Subject']['weight'],
+        sex=metadata['Subject']['sex']
+    )
     nwbfile.subject = experiment_subject
 
     # If adding SpikeGLX data
     if add_spikeglx:
         # Create extractor for SpikeGLX data
         extractor = Spikeglx2NWB(nwbfile=nwbfile, metadata=metadata0, npx_file=npx_file_path)
-
         # Add acquisition data
         extractor.add_acquisition(es_name='ElectricalSeries', metadata=metadata['Ecephys'])
-
         # Run spike sorting method
-        extractor.run_spike_sorting()
-
+        #extractor.run_spike_sorting()
         # Save content to NWB file
         extractor.save(to_path=f_nwb)
     else:

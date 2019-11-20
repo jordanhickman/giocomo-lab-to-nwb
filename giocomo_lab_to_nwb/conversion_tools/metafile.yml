@@ -2,11 +2,11 @@ Ecephys:
   Device:
     - name: 'neuropixel_probes'
   ElectricalSeries:
-    - comments: ''
-      data: true
-      description: ''
-      electrodes: true
-      name: ElectricalSeries
+    comments: ''
+    data: true
+    description: ''
+    electrodes: true
+    name: ElectricalSeries
   ElectrodeGroup:
     - description: single neuropixels probe http://www.open-ephys.org/neuropixelscorded
       device: neuropixel_probes
