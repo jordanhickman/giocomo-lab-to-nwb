@@ -1,5 +1,3 @@
-
-
 from tkinter import *
 from tkinter import ttk
 from tkcalendar import Calendar, DateEntry
@@ -12,7 +10,6 @@ import conversion
 import os.path
 
 
-#datetime_iso = ''
 # setup Stanford timezone timezones
 timezone_cali = pytz.timezone('US/Pacific')
 
