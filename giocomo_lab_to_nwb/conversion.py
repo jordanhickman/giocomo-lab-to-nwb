@@ -10,6 +10,8 @@ from pynwb import NWBFile, NWBHDF5IO
 from pynwb.misc import Units
 from pynwb.file import Subject
 from pynwb.behavior import Position, BehavioralEvents
+from pynwb.image import ImageSeries
+from ndx_labmetadata_giocomo import LabMetaData_ext
 
 def convert(input_file,
             session_start_time,
@@ -119,6 +121,19 @@ def convert(input_file,
 
     nwbfile.subject = experiment_subject
 
+    # adding constants
+    # Creates LabMetaData container
+    #lab_metadata = LabMetaData_ext(
+    #    name='LabMetaData',
+    #   acquisition_sampling_rate=1000.,
+    #    number_of_electrodes=10,
+    #    file_path='',
+    #    bytes_to_skip=2,
+    #    raw_data_dtype='int16',
+    #    high_pass_filtered=False
+    #)
+
+
     # Adding trial information
     nwbfile.add_trial_column('trial_contrast', 'visual contrast of the maze through which the mouse is running')
     trial = np.ravel(matfile['trial'])
@@ -177,6 +192,21 @@ def convert(input_file,
                                   description='Subject position in virtual hallway during the lick.')
     nwbfile.add_acquisition(lick_events)
 
+    # Add information on the visual stimulus that was shown to the subject
+    # assumed rate=60 [Hz]. Update if necessary
+    # assumed number of frames equal to the number of samples in the data. Update if necessary
+    vr_start_time = matfile['sp'][0]['vr_session_offset'][0][0][0]
+    #default_num_frames = iter(np.ravel(matfile['post']).size)
+    visualization = ImageSeries(name='ImageSeries',
+                                unit='seconds',
+                                format='external',
+                                external_file=list(['https://unity.com/VR-and-AR-corner']),
+                                starting_time=vr_start_time,
+                                starting_frame=[[0]],
+                                rate=float(60),
+                                description='virtual Unity environment that the mouse navigates through')
+    nwbfile.add_stimulus(visualization)
+
     # Add the recording device, a neuropixel probe
     recording_device = nwbfile.create_device(name='neuropixel_probes')
     electrode_group_description = 'single neuropixels probe http://www.open-ephys.org/neuropixelscorded'
@@ -206,7 +236,7 @@ def convert(input_file,
     nwbfile.add_electrode_column('relativey','electrode y-location on the probe')
 
     for idx in recording_electrodes:
-        nwbfile.add_electrode(idx,
+        nwbfile.add_electrode(id=idx,
                               x=np.nan,
                               y=np.nan,
                               z=np.nan,
@@ -286,9 +316,9 @@ if __name__ == '__main__':
     '''
 
     if len(sys.argv) > 1:
-        # this indicates conversion.py being called from terminal
+        # this indicates conversion.py being called from terminal and should use path entered in terminal
         config_file_path = sys.argv[1]
         interface_config.read_yaml(config_file_path)
     else:
-        # indicates __main__ being run inside editor
+        # indicates __main__ being run inside editor and should use path from config.yaml
         interface_config.read_yaml()
