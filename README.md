@@ -15,6 +15,11 @@ Alternatively, to install directly in an existing environment:
 $ pip install giocomo-lab-to-nwb
 ```
 
+To install the [ndx-labmetadata-giocomo](https://github.com/ben-dichter-consulting/ndx-labmetadata-giocomo) extension:
+```
+$ pip install git+https://github.com/ben-dichter-consulting/ndx-labmetadata-giocomo.git
+```
+
 # Use
 After activating the correct environment, the conversion function can be used in different forms:
 
@@ -24,18 +29,26 @@ Here's an example: we'll grab SpikeGLX data from `.imec0.ap.bin` files and conve
 from giocomo_lab_to_nwb.conversion_tools.conversion_module import conversion_function
 import yaml
 
+# Nwb file
+f_nwb = 'output_glx.nwb'
+
+# Source files
 source_paths = {}
 source_paths['spikeglx data'] = {'type': 'file', 'path': 'G4_190620_keicontrasttrack_10secBaseline1_g0_t0.imec0.ap.bin'}
-f_nwb = 'output.nwb'
+source_paths['processed data'] = {'type': 'file', 'path': 'npI5_0417_baseline_1.mat'}
 
 # Load metadata from YAML file
 metafile = 'metafile.yml'
 with open(metafile) as f:
    metadata = yaml.safe_load(f)
 
+# Other options
+kwargs = {'spikeglx': True, 'processed': False}
+
 conversion_function(source_paths=source_paths,
                     f_nwb=f_nwb,
-                    metadata=metadata)
+                    metadata=metadata,
+                    **kwargs)
 ```
 <br/>
 
@@ -51,6 +64,12 @@ To use the GUI, just run the auxiliary function `nwb_gui.py` from terminal:
 ```
 $ python nwb_gui.py
 ```
+The GUI eases the task of editing the metadata of the resulting `.nwb` file, it is integrated with the conversion module (conversion on-click) and allows for visually exploring the data in the end file with [nwb-jupyter-widgets](https://github.com/NeurodataWithoutBorders/nwb-jupyter-widgets).
+
+![](media/gif_mat.gif)
+
+![](media/gif_glx.gif)
+
 <br/>
 
 **4. Tutorial:** <br/>
