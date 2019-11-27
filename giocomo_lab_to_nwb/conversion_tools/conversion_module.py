@@ -81,6 +81,12 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
                               stop_time=trial_times[-1],
                               trial_contrast=matfile['trial_contrast'][num-1][0])
 
+        # create behavior processing module
+        behavior = nwbfile.create_processing_module(
+            name='behavior',
+            description='behavior processing module'
+        )
+
         # Add mouse position
         position = Position(name=metadata['Behavior']['Position']['name'])
         meta_pos_names = [sps['name'] for sps in metadata['Behavior']['Position']['spatial_series']]
@@ -119,7 +125,7 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
             comments=meta_phys['comments']
         )
 
-        nwbfile.add_acquisition(position)
+        behavior.add(position)
 
         # Add timing of lick events, as well as mouse's virtual position during lick event
         lick_events = BehavioralEvents(name=metadata['Behavior']['BehavioralEvents']['name'])
@@ -132,7 +138,7 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
             description=meta_ts['description']
         )
 
-        nwbfile.add_acquisition(lick_events)
+        behavior.add(lick_events)
 
         # Add the recording device, a neuropixel probe
         recording_device = nwbfile.create_device(name=metadata['Ecephys']['Device'][0]['name'])
