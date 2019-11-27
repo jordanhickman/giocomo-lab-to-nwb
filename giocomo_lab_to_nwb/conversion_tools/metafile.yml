@@ -3,7 +3,7 @@ Ecephys:
     - name: 'neuropixel_probes'
   ElectricalSeries:
     data: true
-    description: ''
+    description: ADDME
     electrodes: true
     name: ElectricalSeries
   ElectrodeGroup:
