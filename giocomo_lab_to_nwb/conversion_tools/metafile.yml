@@ -2,7 +2,6 @@ Ecephys:
   Device:
     - name: 'neuropixel_probes'
   ElectricalSeries:
-    comments: ''
     data: true
     description: ''
     electrodes: true
@@ -36,7 +35,6 @@ Behavior:
       unit: centimeter
       description: Subject position in virtual hallway during the lick.
 NWBFile:
-  data_collection: ''
   experiment_description: Virtual Hallway Task
   experimenter: Kei Masuda
   identifier: ABC123
@@ -56,10 +54,6 @@ NWBFile:
     high_pass_filtered: True
     movie_start_time: 15.6
     subject_brain_region: Medial Entorhinal Cortex
-  notes: ''
-  pharmacology: ''
-  protocol: ''
-  related_publications: ''
   session_description: session_description
   session_id: ADDME
   session_start_time: 2017-04-04 10:00:00
