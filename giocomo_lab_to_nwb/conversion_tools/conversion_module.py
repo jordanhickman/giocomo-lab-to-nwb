@@ -130,13 +130,9 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
         # Add timing of lick events, as well as mouse's virtual position during lick event
         lick_events = BehavioralEvents(name=metadata['Behavior']['BehavioralEvents']['name'])
         meta_ts = metadata['Behavior']['BehavioralEvents']['time_series']
-        lick_events.create_timeseries(
-            name=meta_ts['name'],
-            data=np.ravel(matfile['lickx']),
-            timestamps=np.ravel(matfile['lickt']),
-            unit=meta_ts['unit'],
-            description=meta_ts['description']
-        )
+        meta_ts['data'] = np.ravel(matfile['lickx'])
+        meta_ts['timestamps'] = np.ravel(matfile['lickt'])
+        lick_events.create_timeseries(**meta_ts)
 
         behavior.add(lick_events)
 

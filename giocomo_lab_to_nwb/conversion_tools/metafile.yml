@@ -2,10 +2,8 @@ Ecephys:
   Device:
     - name: 'neuropixel_probes'
   ElectricalSeries:
-    data: true
-    description: ADDME
-    electrodes: true
-    name: ElectricalSeries
+    - description: ADDME
+      name: ElectricalSeries
   ElectrodeGroup:
     - description: single neuropixels probe http://www.open-ephys.org/neuropixelscorded
       device: neuropixel_probes
@@ -16,13 +14,11 @@ Behavior:
     name: Position
     spatial_series:
       - comments: The values should be >0 and <400cm. Values greater than 400cm mean that the mouse briefly exited the maze.
-        data: true
         description: Subject position in the virtual hallway.
         name: VirtualPosition
         reference_frame: The start of the trial, which begins at the start of the virtual hallway.
         conversion: 0.01
       - comments: Physical location found by dividing the virtual position by the trial_gain
-        data: true
         description: Physical location on the wheel measured since the beginning of the trial.
         name: PhysicalPosition
         reference_frame: Location on wheel re-referenced to zero at the start of each trial.
@@ -31,17 +27,13 @@ Behavior:
     name: BehavioralEvents
     time_series:
       name: LickEvents
-      data: True
       unit: centimeter
       description: Subject position in virtual hallway during the lick.
 NWBFile:
   experiment_description: Virtual Hallway Task
   experimenter: Kei Masuda
-  identifier: ABC123
+  identifier: ADDME
   institution: Stanford University School of Medicine
-  keywords:
-  - kw1
-  - kw2
   lab: Giocomo lab
   lab_meta_data:
     neurodata_type: LabMetaData_ext
@@ -54,8 +46,7 @@ NWBFile:
     high_pass_filtered: True
     movie_start_time: 15.6
     subject_brain_region: Medial Entorhinal Cortex
-  session_description: session_description
-  session_id: ADDME
+  session_description: ADDME
   session_start_time: 2017-04-04 10:00:00
   surgery: (probe) +/-3.3mm ML, 0.2mm A of sinus, then as deep as possible
 Subject:
