@@ -16,7 +16,7 @@ import copy
 import os
 
 
-def conversion_function(source_paths, f_nwb, metadata, **kwargs):
+def conversion_function(source_paths, f_nwb, metadata, add_spikeglx=False, add_processed=False):
     """
     Copy data stored in a set of .npz files to a single NWB file.
 
@@ -30,18 +30,9 @@ def conversion_function(source_paths, f_nwb, metadata, **kwargs):
         Path to output NWB file, e.g. 'my_file.nwb'.
     metadata : dict
         Dictionary containing metadata
-    **kwargs : key, value pairs
-        Extra keyword arguments, e.g. {'spikeglx': True, 'processed': True}
+    add_spikeglx: bool
+    add_processed: bool
     """
-
-    # Optional keywords
-    add_spikeglx = False
-    add_processed = False
-    for key, value in kwargs.items():
-        if key == 'spikeglx':
-            add_spikeglx = kwargs[key]
-        if key == 'processed':
-            add_processed = kwargs[key]
 
     # Source files
     npx_file_path = None
