@@ -26,9 +26,9 @@ Behavior:
   BehavioralEvents:
     name: BehavioralEvents
     time_series:
-      name: LickEvents
-      unit: centimeter
-      description: Subject position in virtual hallway during the lick.
+      - name: LickEvents
+        unit: centimeter
+        description: Subject position in virtual hallway during the lick.
 NWBFile:
   experiment_description: Virtual Hallway Task
   experimenter: Kei Masuda
